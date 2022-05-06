@@ -1,3 +1,4 @@
+package com;
 
 public class ContaPagar {
 	
@@ -5,14 +6,21 @@ public class ContaPagar {
 	private double valor;
 	private String dataVencimento;
 	private Fornecedor fornecedor;
+	private SituacaoConta situacaoConta;
 	
 	//contrutor 
-	ContaPagar(){
+	 public ContaPagar(){
+		
+		this.situacaoConta = SituacaoConta.PENDENTE;
 		
 	}
 	
-	ContaPagar(Fornecedor fornecedor, String descricao, double valor,
+	public ContaPagar(Fornecedor fornecedor, String descricao, double valor,
 	           String dataVencimento){
+		
+		//chamando o construtor sem parâmentros
+		this();
+		
 		this.fornecedor = fornecedor;
 		this.descricao = descricao;
 		this.valor = valor;
@@ -48,13 +56,45 @@ public class ContaPagar {
 		this.dataVencimento = dataVencimento;
 	}
 	
-	void pagar () {
-		
-		System.out.println("descrição da conta: "+ this.getDescricao() + 
-				           "\nvalor: " + this.getValor() + 
-				           "\nData de Vencimento: "+ this.getDataVencimento()+
-				           "\nFornecedor: "+ this.getFornecedor().getNome() +".\n\n");
+	public SituacaoConta getSituacaoConta() {
+		return situacaoConta;
 	}
+	
+ public void pagar () {
+		
+		if (SituacaoConta.PAGA.equals(this.getSituacaoConta())) {
+			System.out.println("Não pode pagar uma conta que já está paga: " 
+				+ this.getDescricao() + ".");
+		} else if (SituacaoConta.CANCELADA.equals(this.getSituacaoConta())) {
+			System.out.println("Não pode pagar uma conta que está cancelada: " 
+				+ this.getDescricao() + ".");
+		} else {
+			System.out.println("Pagando conta " + this.getDescricao() + " no valor de " 
+				+ this.getValor() + " e vencimento em " + this.getDataVencimento() 
+				+ " do fornecedor " + this.getFornecedor().getNome() + ".");
+				
+			// altera situação da conta para PAGA
+			this.situacaoConta = SituacaoConta.PAGA;
+		}
+	}
+ 
+	
+ public void cancelar() {
+		if (SituacaoConta.PAGA.equals(this.getSituacaoConta())) {
+			System.out.println("Não pode cancelar uma conta que já foi paga: " 
+				+ this.getDescricao() + ".");
+		} else if (SituacaoConta.CANCELADA.equals(this.getSituacaoConta())) {
+			System.out.println("Não pode cancelar uma conta que já foi cancelada: " 
+				+ this.getDescricao() + ".");
+		} else {
+			System.out.println("Cancelando conta " + this.getDescricao() + ".");
+			
+			// altera situação da conta para CANCELADA
+			this.situacaoConta = SituacaoConta.CANCELADA;
+		}
+	}
+
+	
 	
 	
 
